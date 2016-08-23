@@ -1,0 +1,35 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+    defaultConfig {
+        applicationId "com.jojonarte.pjsipspike"
+        minSdkVersion 16
+        targetSdkVersion 24
+        versionCode 4
+        versionName "1.4"
+        manifestPlaceholders = [HOCKEYAPP_APP_ID: "459e4a6adc724166a5558bad80e667fc"]
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'net.hockeyapp.android:HockeySDK:4.0.0'
+    testCompile 'junit:junit:4.12'
+
+}
