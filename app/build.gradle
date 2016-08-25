@@ -6,9 +6,9 @@ android {
     defaultConfig {
         applicationId "com.jojonarte.pjsipspike"
         minSdkVersion 16
-        targetSdkVersion 24
-        versionCode 4
-        versionName "1.4"
+        targetSdkVersion 22
+        versionCode 5
+        versionName "1.5"
         manifestPlaceholders = [HOCKEYAPP_APP_ID: "459e4a6adc724166a5558bad80e667fc"]
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -31,5 +31,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'net.hockeyapp.android:HockeySDK:4.0.0'
     testCompile 'junit:junit:4.12'
-
+    compile "com.google.code.gson:gson:2.+"
 }

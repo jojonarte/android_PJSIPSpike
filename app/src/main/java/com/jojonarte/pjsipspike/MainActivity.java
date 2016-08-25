@@ -74,6 +74,7 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        this.startService(new Intent(this, MyService.class));
         if (app == null) {
             app = new MyApp();
             // Wait for GDB to init, for native debugging only
@@ -89,7 +90,7 @@ public class MainActivity extends Activity
             app.init(this, getFilesDir().getAbsolutePath());
         }
 
-        if (app.accList.size() == 0) {
+        if (app.accList.size() == 0 && app != null) {
             accCfg = new AccountConfig();
             accCfg.setIdUri("sip:localhost");
             accCfg.getNatConfig().setIceEnabled(true);

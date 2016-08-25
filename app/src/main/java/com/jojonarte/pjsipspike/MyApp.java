@@ -1,34 +1,32 @@
 package com.jojonarte.pjsipspike;
 
 
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Process;
+import android.util.Log;
+
 import java.io.File;
 import java.util.ArrayList;
 
 import org.pjsip.pjsua2.*;
 
 public class MyApp {
-    static {
-        try{
-            System.loadLibrary("openh264");
-            // Ticket #1937: libyuv is now included as static lib
-            //System.loadLibrary("yuv");
-        } catch (UnsatisfiedLinkError e) {
-            System.out.println("UnsatisfiedLinkError: " + e.getMessage());
-            System.out.println("This could be safely ignored if you " +
-                    "don't need video.");
-        }
-        System.loadLibrary("pjsua2");
-        System.out.println("Library loaded");
-    }
 
-    public static Endpoint ep = new Endpoint();
+    private Handler mHandler;
+    private HandlerThread mWorkerThread;
+    private static final String  TAG = "PJSIPSPIKE";
+
+    private MyApp self;
+
+    public static Endpoint ep;
     public static MyAppObserver observer;
     public ArrayList<MyAccount> accList = new ArrayList<MyAccount>();
 
     private ArrayList<MyAccountConfig> accCfgs =
             new ArrayList<MyAccountConfig>();
-    private EpConfig epConfig = new EpConfig();
-    private TransportConfig sipTpConfig = new TransportConfig();
+    private EpConfig epConfig;
+    private TransportConfig sipTpConfig;
     private String appDir;
 
     /* Maintain reference to log writer to avoid premature cleanup by GC */
@@ -40,12 +38,26 @@ public class MyApp {
 
     public void init(MyAppObserver obs, String app_dir)
     {
+
         init(obs, app_dir, false);
+        load();
+
+
+
+    }
+
+
+    private void job(Runnable job) {
+        mHandler.post(job);
+
     }
 
     public void init(MyAppObserver obs, String app_dir,
                      boolean own_worker_thread)
     {
+
+        load();
+
         observer = obs;
         appDir = app_dir;
 
@@ -139,6 +151,38 @@ public class MyApp {
             return;
         }
     }
+
+    private void load() {
+        // Load native libraries
+        try {
+            System.loadLibrary("openh264");
+        } catch (UnsatisfiedLinkError error) {
+            Log.e(TAG, "Error while loading OpenH264 native library", error);
+        }
+
+        try {
+            System.loadLibrary("yuv");
+        } catch (UnsatisfiedLinkError error) {
+            Log.e(TAG, "Error while loading libyuv native library", error);
+        }
+
+        try {
+            System.loadLibrary("pjsua2");
+        } catch (UnsatisfiedLinkError error) {
+            Log.e(TAG, "Error while loading PJSIP pjsua2 native library", error);
+        }
+
+        if(self == null)  {
+            self = this;
+
+            ep = new Endpoint();
+            epConfig = new EpConfig();
+            sipTpConfig = new TransportConfig();
+        }
+
+
+    }
+
 
     public MyAccount addAcc(AccountConfig cfg)
     {
