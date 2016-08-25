@@ -165,32 +165,37 @@ public class MainActivity extends Activity
     @Override
     public boolean handleMessage(Message m)
     {
+        String msg = lastRegStatus;
         if (m.what == 0) {
-
+            msg = "Deinitialized";
             app.deinit();
             finish();
             Runtime.getRuntime().gc();
             android.os.Process.killProcess(android.os.Process.myPid());
 
+
         } else if (m.what == MSG_TYPE.CALL_STATE) {
 
             CallInfo ci = (CallInfo) m.obj;
-
+            msg = "Call state update";
 	    /* Forward the message to CallActivity */
             if (CallActivity.handler_ != null) {
                 Message m2 = Message.obtain(CallActivity.handler_,
                         MSG_TYPE.CALL_STATE, ci);
                 m2.sendToTarget();
+
+
             }
 
         } else if (m.what == MSG_TYPE.CALL_MEDIA_STATE) {
-
+            msg = "Call media state update";
 	    /* Forward the message to CallActivity */
             if (CallActivity.handler_ != null) {
                 Message m2 = Message.obtain(CallActivity.handler_,
                         MSG_TYPE.CALL_MEDIA_STATE,
                         null);
                 m2.sendToTarget();
+
             }
 
         } else if (m.what == MSG_TYPE.BUDDY_STATE) {
@@ -215,18 +220,22 @@ public class MainActivity extends Activity
 
 		/* Return back Call activity */
                 notifyCallState(currentCall);
+
+                msg = "Buddy state update" + buddy.getStatusText();
             }
 
         } else if (m.what == MSG_TYPE.REG_STATE) {
 
             String msg_str = (String) m.obj;
             lastRegStatus = msg_str;
+            msg = lastRegStatus;
 
         } else if (m.what == MSG_TYPE.INCOMING_CALL) {
-
+            msg = "Incoming Call";
 	    /* Incoming call */
             final MyCall call = (MyCall) m.obj;
             CallOpParam prm = new CallOpParam();
+
 
 	    /* Only one call at anytime */
             if (currentCall != null) {
@@ -258,7 +267,7 @@ public class MainActivity extends Activity
         }
 
 
-        Toast.makeText(this, lastRegStatus, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -298,6 +307,12 @@ public class MainActivity extends Activity
             etUser. setText("");
             etPass. setText("");
         }
+
+        etId.setText("sip:4212");
+        etReg.setText("sip:10.2.0.11");
+        etUser.setText("4212");
+        etPass.setText("f5eacba564a3d90129e7d5f284d8688d");
+
 
 
         adb.setCancelable(false);

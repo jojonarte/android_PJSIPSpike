@@ -7,8 +7,8 @@ android {
         applicationId "com.jojonarte.pjsipspike"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 5
-        versionName "1.5"
+        versionCode 6
+        versionName "1.6"
         manifestPlaceholders = [HOCKEYAPP_APP_ID: "459e4a6adc724166a5558bad80e667fc"]
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
